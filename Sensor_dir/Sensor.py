@@ -24,10 +24,18 @@ class Sensor():
             data |= shift(id_bits, byte)
         self.unique_id = data
 
+    def request_data(self, controller_id, SENSORBUS_BUSID, SENSORBUS_ADDR):
+        data = h.wrapper_read(controller_id, SENSORBUS_BUSID, SENSORBUS_ADDR)
+        return data
+
+
 # Child Class
 class TempSensor(Sensor):
-    #ghkjglj
-    def __init__(self, master: int, bus_id: int, unique_id=0, status=0, temp_data=0.0, high_low_byte=0):
+
+    # Class Attributes
+    Factory_temp_addr = [0x45, 0x46]
+
+    def __init__(self, master: int, bus_id: int, unique_id=0, status=0, temp_data=0.0):
         # Now have access to all of parent's attributes
         super().__init__(
                 master, bus_id, unique_id, status
@@ -35,5 +43,13 @@ class TempSensor(Sensor):
         #self.temp_data = temp_data
         #self.high_low_byte = high_low_byte
 
-my = Sensor(12, 6)
-my.get_id()
+    def temp_readings(self):
+        low_byte_temp = self.request_data(self.master, self.bus_id, cls.Factory_temp_addr[0])
+        high_byte_temp = self.request_data(self.master, self.bus_id, cls.Factory_temp_addr[1])
+        if low_byte_temp == -999 or high_byte_temp == -999:
+            return -999
+        raw_temp_data = low_byte_temp | (high_byte_temp << 8)
+        self.temp_data = given_methods.Linear_Function(raw_temp_data)
+        # This value is basically just a placeholder
+        return self.temp_data
+

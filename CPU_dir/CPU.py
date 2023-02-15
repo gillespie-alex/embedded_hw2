@@ -39,9 +39,6 @@ class CPU():
             temp_ctlr.get_id()
             cls.Factory_Controllers_LUT.append(temp_ctlr)
 
-        #print(cls.Factory_Sensors_LUT)
-        for stuff in cls.Factory_Controllers_LUT:
-            print(stuff.unique_id)
 
     @classmethod
     def poll(cls):
