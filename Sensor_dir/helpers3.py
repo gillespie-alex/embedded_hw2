@@ -1,7 +1,7 @@
 import random
 
 import given_methods
-import constants as c
+import constants3 as c
 
 
 # Controller Write

@@ -1,7 +1,7 @@
 from Sensor import *
-from helpers import *
+from helpers3 import *
 from given_methods import *
-from constants import *
+from constants3 import *
 
 print("Initializing Sensor module")
 
