@@ -34,7 +34,7 @@ def check_wrapper_read():
 def wrapper_read(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int) -> int:
     # Normally should make sure that SENSORBUS_STATUS is not busy, but will assume so on startup
     status = wrapper_sensorbus_status_read(0, controller_id)
-    if status = 0x01:
+    if status == 0x01:
         # Meaning ERROR
         return -999
 
@@ -42,13 +42,13 @@ def wrapper_read(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int) 
     wrapper_write(controller_id, SENSORBUS_BUSID, SENSORBUS_ADDR, 0x0, c.READ)
 
     while True:
-        val = wrapper_sensorbus_status_read(1)
+        val = wrapper_sensorbus_status_read(1, controller_id)
         val &= 0x01
         if val == 0x01:
             break
 
     while True:
-        val = wrapper_sensorbus_status_read(0)
+        val = wrapper_sensorbus_status_read(0, controller_id)
         val &= 0x01
         if val == 0x00:
             # Register is now ready to be read from

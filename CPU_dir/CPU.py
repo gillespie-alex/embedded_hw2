@@ -6,8 +6,6 @@ import helpers1
 
 sys.path.insert(0, '/home/alex/Desktop/embedded_hw2/Sensor_dir')
 sys.path.insert(0, '/home/alex/Desktop/embedded_hw2/Controller_dir')
-print("about to print path")
-print(sys.path)
 from Sensor import TempSensor
 from Controller import Controller
 
@@ -35,19 +33,24 @@ class CPU():
 
             cls.Factory_Sensors_LUT.append(sensors)
             # Initialize Controller object
-            temp_ctlr = Controller(sensor_list=sensors)
+            temp_ctlr = Controller(bus_id=c, sensor_list=sensors)
             temp_ctlr.get_id()
             cls.Factory_Controllers_LUT.append(temp_ctlr)
+        #for i, C in enumerate(cls.Factory_Controllers_LUT):
+         #   print(f"Controller {i} id: {C.unique_id}")
+          #  for j, S in enumerate(C.sensor_list):
+           #     print(f"\tSensor {S.bus_id} id: {S.unique_id}")
 
 
     @classmethod
     def poll(cls):
-        for _ in range(4):
+        for _ in range(5):
             # Inisde these functions they will switch off
             cls.generator_index = helpers1.generator(cls.generator_index, cls.Factory_Controllers_LUT)
-            print(cls.generator_index)
-            cls.inspector_index = helpers1.inspector(cls.inspector_index, cls.Factory_Controllers_LUT)
+            (cls.inspector_index, output) = helpers1.inspector(cls.inspector_index, cls.Factory_Controllers_LUT)
+            print('\n')
+            helpers1.console_output(output)
 
 CPU.initialize()
 CPU.poll()
-time.sleep(0.1)
+#time.sleep(0.1)

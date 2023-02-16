@@ -6,7 +6,7 @@ import constants1 as c
 
 # Get time and convert to milliseconds
 def get_time():
-    t = time.perf_counter() * 1000
+    t = time.perf_counter() * 1_000_000
     return int(t)
 
 def generate(ctlr_obj):
@@ -27,16 +27,15 @@ def generate(ctlr_obj):
 
 # Producer
 def generator(index, controllers):
-    start_ms = get_time()
-    while (get_time() - start_ms) < c.TIME_QUANTUM:
+    start_us = get_time()
+    while (get_time() - start_us) < c.TIME_QUANTUM:
         # Mark the clipboards
         generate(controllers[index])
 
-        index += 1 if index+1 < len(controllers) else 0
+        index = index+1 if (index+1) < len(controllers) else 0
 
-        print("generator time")
-        time.sleep(0.0001)
-    print(get_time() - start_ms)
+        #print(f"generator time at index {index}")
+        #time.sleep(0.0001)
     return index
 
 def reset_ctlr(ctlr_obj):
@@ -45,29 +44,32 @@ def reset_ctlr(ctlr_obj):
     ctlr_obj.sns_data = 0.0
     ctlr_obj.next_sensor()
 
-def inspect(ctlr_obj, sensor_measurements):
+def inspect(ctlr_obj):
+    sensor_tuple = (-1,-1,-1)
     if ctlr_obj.status == c.BUSY and (get_time() - ctlr_obj.time_start) > c.AVG_TIME:
         # Try and read from the sensor as enough time has passed
         if ctlr_obj.valid:
             data = ctlr_obj.sns_data 
-            sensor_tuple = (ctlr_obj.unique_id, ctlr_obj.sensor_list[ctlr_obj.sns_index], data)
-            sensor_measurements.append(sensor_tuple)
+            sensor_tuple = (ctlr_obj.bus_id, ctlr_obj.sensor_list[ctlr_obj.sns_index].bus_id, data)
             reset_ctlr(ctlr_obj)
-    return sensor_measurements
+    return sensor_tuple
 
 # Consumer
 def inspector(index, controllers):
-    start_ms = get_time()
+    start_us = get_time()
     sensor_measurements = []
-    while (get_time() - start_ms) < c.TIME_QUANTUM:
-        inspect(controllers[index], sensor_measurements)
+    while (get_time() - start_us) < c.TIME_QUANTUM:
+        sensor_measurements.append(inspect(controllers[index]))
         # Mark the clipboards
-        index += 1 if index+1 < len(controllers) else 0
-        print("inspector time")
-        time.sleep(0.0001)
-    print(get_time() - start_ms)
-    return index
+        index = index+1 if (index+1) < len(controllers) else 0
+        #print(f"inspector time at index {index}")
+    return (index, sensor_measurements)
 
 
-
+def console_output(measurements):
+    for measure in measurements:
+        if measure == (-1,-1,-1):
+            continue
+        C_id, S_id, Temp = measure
+        print(f"Controller: {C_id} Sensor: {S_id} reads Temperature: {Temp}")
 

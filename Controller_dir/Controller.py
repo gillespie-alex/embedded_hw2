@@ -1,11 +1,11 @@
-import random
-
 import constants2 as c
 import helpers2 as h
 
 
 class Controller():
-    def __init__(self, unique_id=None, sensor_list = [None], status=c.IDLE, time_start=0, sns_index=0, valid=False, sns_data=0.0):
+
+    def __init__(self, bus_id: int, sensor_list, unique_id=None,  status=c.IDLE, time_start=0, sns_index=0, valid=False, sns_data=0.0):
+        self.bus_id = bus_id
         self.unique_id = unique_id
         self.sensor_list = sensor_list
         self.status = status
@@ -15,7 +15,11 @@ class Controller():
         self.sns_data = sns_data
 
     def get_id(self):
-        self.unique_id = random.randint(0,10000000)
+
+        data  = h.wrapper_read(self.bus_id, c.UNIQUE_ID1_ADDR) 
+        data |= (h.wrapper_read(self.bus_id, c.UNIQUE_ID2_ADDR) << 32)
+
+        self.unique_id = data
 
     def next_sensor(self):
         self.sns_index += 1 if self.sns_index+1 < len(self.sensor_list) else 0
@@ -24,7 +28,7 @@ class Controller():
         pass
 
     def request_sensor_data(self):
-        sensor_data = sensor_list[sns_index].temp_readings()
+        sensor_data = self.sensor_list[self.sns_index].temp_readings()
         # This could be -999 indicating ERROR
         if sensor_data == -999:
             return

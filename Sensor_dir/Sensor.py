@@ -1,7 +1,8 @@
 # Import
 import helpers3 as h
+import given_methods
 
-# Lambda function to shift the bits
+# Lambda function to shift the sensor_id bits
 shift = lambda x, byte : x << (byte*8) 
 
 
@@ -44,8 +45,8 @@ class TempSensor(Sensor):
         #self.high_low_byte = high_low_byte
 
     def temp_readings(self):
-        low_byte_temp = self.request_data(self.master, self.bus_id, cls.Factory_temp_addr[0])
-        high_byte_temp = self.request_data(self.master, self.bus_id, cls.Factory_temp_addr[1])
+        low_byte_temp = self.request_data(self.master, self.bus_id, TempSensor.Factory_temp_addr[0])
+        high_byte_temp = self.request_data(self.master, self.bus_id, self.Factory_temp_addr[1])
         if low_byte_temp == -999 or high_byte_temp == -999:
             return -999
         raw_temp_data = low_byte_temp | (high_byte_temp << 8)
