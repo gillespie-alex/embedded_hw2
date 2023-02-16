@@ -4,7 +4,7 @@ import helpers2 as h
 
 class Controller():
 
-    def __init__(self, bus_id: int, sensor_list, unique_id=None,  status=c.IDLE, time_start=0, sns_index=0, valid=False, sns_data=0.0):
+    def __init__(self, bus_id: int, sensor_list, unique_id=None,  status=c.IDLE, time_start=0, sns_index=0, valid=False, sns_data=0.0, noise=0):
         self.bus_id = bus_id
         self.unique_id = unique_id
         self.sensor_list = sensor_list
@@ -13,6 +13,7 @@ class Controller():
         self.sns_index = sns_index
         self.valid = valid
         self.sns_data = sns_data
+        self.noise = noise
 
     def get_id(self):
 
@@ -22,12 +23,19 @@ class Controller():
         self.unique_id = data
 
     def next_sensor(self):
-        self.sns_index += 1 if self.sns_index+1 < len(self.sensor_list) else 0
+        self.sns_index = self.sns_index+1 if self.sns_index+1 < len(self.sensor_list) else 0
     
-    def check_sensor_status(self):
-        pass
+    def check_sensor_status(self, time):
+        # Return boolean value
+        return self.valid and time > self.noise
+
+
+    def random_noise(self):
+        self.noise = h.calc_noise()
+
 
     def request_sensor_data(self):
+        self.random_noise()
         sensor_data = self.sensor_list[self.sns_index].temp_readings()
         # This could be -999 indicating ERROR
         if sensor_data == -999:

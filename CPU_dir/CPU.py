@@ -44,10 +44,10 @@ class CPU():
 
     @classmethod
     def poll(cls):
-        for _ in range(5):
+        for _ in range(25):
             # Inisde these functions they will switch off
             cls.generator_index = helpers1.generator(cls.generator_index, cls.Factory_Controllers_LUT)
-            (cls.inspector_index, output) = helpers1.inspector(cls.inspector_index, cls.Factory_Controllers_LUT)
+            cls.inspector_index, output = helpers1.inspector(cls.inspector_index, cls.Factory_Controllers_LUT)
             print('\n')
             helpers1.console_output(output)
 

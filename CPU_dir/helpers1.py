@@ -17,12 +17,12 @@ def generate(ctlr_obj):
         ctlr_obj.request_sensor_data()
 
     elif ctlr_obj.status == c.BUSY and (get_time() - ctlr_obj.time_start) > c.ALLOWED_TIME:
-        # This means the sensor is bad so move on to next sensor
-        ctlr_obj.next_sensor()
-        # Change the start time
-        ctlr_obj.time_start = get_time()
-        # Now request the new sensor's data
-        ctlr_obj.request_sensor_data()
+        print("Encountered an invalid sensor")
+        print(ctlr_obj.__dict__)
+        # This means the sensor is bad so move on to next sensor by resetting controller
+        reset_ctlr(ctlr_obj)
+        print("after change:")
+        print(ctlr_obj.__dict__)
 
 
 # Producer
@@ -46,9 +46,10 @@ def reset_ctlr(ctlr_obj):
 
 def inspect(ctlr_obj):
     sensor_tuple = (-1,-1,-1)
+    # Try and read from the sensor as enough avg time has passed
     if ctlr_obj.status == c.BUSY and (get_time() - ctlr_obj.time_start) > c.AVG_TIME:
-        # Try and read from the sensor as enough time has passed
-        if ctlr_obj.valid:
+        # The value passed is equal to how much time we are past the AVG_TIME
+        if ctlr_obj.check_sensor_status(get_time() - ctlr_obj.time_start - c.AVG_TIME):
             data = ctlr_obj.sns_data 
             sensor_tuple = (ctlr_obj.bus_id, ctlr_obj.sensor_list[ctlr_obj.sns_index].bus_id, data)
             reset_ctlr(ctlr_obj)

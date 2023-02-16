@@ -12,3 +12,10 @@ def Given_Read(busId: int, address: int) -> int:
 def wrapper_read(controller_id: int, UNIQUE_ID_ADDR: int) -> int:
     return Given_Read(controller_id, UNIQUE_ID_ADDR)
 
+# Outlier chance of sensor taking more than thousand microseconds 
+def calc_noise():
+    noise = random.randint(0,50)
+    # Only 4% chance
+    if noise >= 49:
+        noise += c.OUTLIER_T
+    return noise
