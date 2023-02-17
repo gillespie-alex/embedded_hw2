@@ -17,12 +17,8 @@ def generate(ctlr_obj):
         ctlr_obj.request_sensor_data()
 
     elif ctlr_obj.status == c.BUSY and (get_time() - ctlr_obj.time_start) > c.ALLOWED_TIME:
-        print("Encountered an invalid sensor")
-        print(ctlr_obj.__dict__)
         # This means the sensor is bad so move on to next sensor by resetting controller
         reset_ctlr(ctlr_obj)
-        print("after change:")
-        print(ctlr_obj.__dict__)
 
 
 # Producer
@@ -82,6 +78,11 @@ def file_write_inventory(controller_list, sensor_list):
             inventory.write(f"  Sensor {j}: {sensor.unique_id}\n")
 
 
-def file_write_logs():
-    pass
+def file_write_logs(measurements):
+    logs = open("logs.txt", "a")
+    for measure in measurements:
+        if measure == (-1,-1,-1):
+            continue
+        C_id, S_id, Temp = measure
+        logs.write(f"Controller: {C_id} Sensor: {S_id} reads Temperature: {Temp}\n")
 

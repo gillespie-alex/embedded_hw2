@@ -40,6 +40,7 @@ def check_sbus_status(desired_status, controller_id):
             return True
     return False
 
+
 def wrapper_write(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int, SENSORBUS_DATA: int, SENSORBUS_OP: int) -> None:
 
     # Ensure that SENSORBUS_STATUS is not busy
@@ -64,6 +65,7 @@ def wrapper_write(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int,
     # Placeholder value
     return 1
 
+
 def wrapper_read(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int) -> int:
 
     # First step in SensoBus reading is to perform a SensorBus write
@@ -86,6 +88,10 @@ def wrapper_read(controller_id: int, SENSORBUS_BUSID: int, SENSORBUS_ADDR: int) 
 
     # Return an 8-bit data value
     return ((data & 0x00FF0000) >> 16)
+
+
+
+
 #------------------------------------------------------------------------------------------#
 '''OLD'''
 ## SensorBus Write

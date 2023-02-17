@@ -12,11 +12,10 @@ class Sensor():
     # Class Attributes
     factory_class_id_addr = [0x20, 0x21, 0x22, 0x24]
 
-    def __init__(self, master: int, bus_id: int, unique_id=0, status=0):
+    def __init__(self, master: int, bus_id: int, unique_id=0):
         self.master = master
         self.bus_id = bus_id
         self.unique_id = unique_id
-        self.status = status
 
     def get_id(self):
         data = 0
@@ -36,10 +35,10 @@ class TempSensor(Sensor):
     # Class Attributes
     Factory_temp_addr = [0x45, 0x46]
 
-    def __init__(self, master: int, bus_id: int, unique_id=0, status=0, temp_data=0.0):
+    def __init__(self, master: int, bus_id: int, unique_id=0, temp_data=0.0):
         # Now have access to all of parent's attributes
         super().__init__(
-                master, bus_id, unique_id, status
+                master, bus_id, unique_id
                 )
         #self.temp_data = temp_data
         #self.high_low_byte = high_low_byte

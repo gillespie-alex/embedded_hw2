@@ -1,4 +1,4 @@
-# Lambdas
+# Masking Functions
 SBUS_ID = lambda val: val
 SBUS_ADDR = lambda val: val << 8
 SBUS_DATA = lambda val: val << 16

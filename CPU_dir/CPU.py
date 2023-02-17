@@ -1,5 +1,4 @@
 import sys
-import time
 
 import constants1
 import helpers1
@@ -37,20 +36,15 @@ class CPU():
             temp_ctlr.get_id()
             cls.Factory_Controllers_LUT.append(temp_ctlr)
         helpers1.file_write_inventory(cls.Factory_Controllers_LUT, cls.Factory_Sensors_LUT)
-        #for i, C in enumerate(cls.Factory_Controllers_LUT):
-         #   print(f"Controller {i} id: {C.unique_id}")
-          #  for j, S in enumerate(C.sensor_list):
-           #     print(f"\tSensor {S.bus_id} id: {S.unique_id}")
 
 
     @classmethod
     def poll(cls):
         for _ in range(35):
+        #while(True):
             cls.generator_index = helpers1.generator(cls.generator_index, cls.Factory_Controllers_LUT)
             cls.inspector_index, output = helpers1.inspector(cls.inspector_index, cls.Factory_Controllers_LUT)
-            print('\n')
-            helpers1.console_output(output)
+            helpers1.file_write_logs(output)
 
 CPU.initialize()
 CPU.poll()
-#time.sleep(0.1)
