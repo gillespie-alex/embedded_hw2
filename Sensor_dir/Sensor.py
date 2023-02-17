@@ -13,9 +13,9 @@ class Sensor():
     factory_class_id_addr = [0x20, 0x21, 0x22, 0x24]
 
     def __init__(self, master: int, bus_id: int, unique_id=0):
-        self.master = master
-        self.bus_id = bus_id
-        self.unique_id = unique_id
+        self._master = master
+        self._bus_id = bus_id
+        self._unique_id = unique_id
 
 
     # Reads from 4 Sensor UNIQUE_ID addresses to get unique_id
@@ -24,7 +24,21 @@ class Sensor():
         for byte in range(4):
             id_bits = h.wrapper_read(self.master, self.bus_id, Sensor.factory_class_id_addr[byte])
             data |= shift(id_bits, byte)
-        self.unique_id = data
+        self._unique_id = data
+
+
+    # Getters to read the protected members
+    @property
+    def unique_id(self):
+        return self._unique_id
+
+    @property
+    def bus_id(self):
+        return self._bus_id
+
+    @property
+    def master(self):
+        return self._master
 
 
     # Retrieves data from specified SENSORBUS_BUSID and SENSORBUS_ADDR
