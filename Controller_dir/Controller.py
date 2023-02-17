@@ -15,6 +15,8 @@ class Controller():
         self.sns_data = sns_data
         self.noise = noise
 
+
+    # Will Read the unique 32 bit UNIQUE_IDs in controller address space and set id
     def get_id(self):
 
         data  = h.wrapper_read(self.bus_id, c.UNIQUE_ID1_ADDR) 
@@ -22,38 +24,33 @@ class Controller():
 
         self.unique_id = data
 
+
+    # Will increment the next sensor to request data from on Controller
     def next_sensor(self):
         self.sns_index = self.sns_index+1 if self.sns_index+1 < len(self.sensor_list) else 0
     
+    
+    # Checks if valid data exists from sensor, and if enough time has passed for sensor
     def check_sensor_status(self, time):
-        # Return boolean value
         return self.valid and time > self.noise
 
 
+    # Adds random noise to each new sensor reading
     def random_noise(self):
         self.noise = h.calc_noise()
 
 
+    # First, creates random noise for the sensor
+    # Will request data from a specific sensor and check if data is valid
+    # If data is valid, change Controller's valid flag (indicating Controller has new data)
     def request_sensor_data(self):
         self.random_noise()
+
         sensor_data = self.sensor_list[self.sns_index].temp_readings()
-        # This could be -999 indicating ERROR
+
         if sensor_data == -999:
             return
         else:
             self.valid = True
             self.sns_data = sensor_data
 
-    '''
-    Steps for Requesting Sensor Data:
-    1. Check SENSORBUS_STATUS is low
-    if low:
-    2. Perform SensorBus Write specifying sensorID, sensorADDR(low byte of temp data), sensorREAD
-    3. Check for SENSORBUS_STATUS to go high
-    if it goes high:
-    4. Check for SENSORBUS_STATUS to go low
-
-    # Perform Read
-    1. 
-
-    '''

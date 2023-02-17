@@ -8,5 +8,5 @@ IDLE = 0
 
 # Timing Constants
 TIME_QUANTUM = 100   #us
-ALLOWED_TIME = 1000  #ms
-AVG_TIME = 120  #ms
+ALLOWED_TIME = 1000  #us
+AVG_TIME = 120  #us

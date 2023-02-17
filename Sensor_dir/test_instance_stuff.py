@@ -1,11 +1,9 @@
-import time
 import pytest
 from unittest.mock import MagicMock
 
 from Sensor import TempSensor
 import helpers3 as h
 
-from item_database import ItemDatabase
 
 @pytest.fixture
 def my_sensor():
@@ -19,11 +17,6 @@ def test_request_data(my_sensor):
     data = my_sensor.request_data(1, 1, 0x45)
     print(f"Data read from sensor: {data}")
 
-def test_database():
-    item1 = ItemDatabase()
-    item1.get = MagicMock(return_value=3)
-    print(item1)
-    assert item1.get() == 3.4
 
 # Grouping tests into sbus_ops
 '''pytest ./my_test.py -m sbus_ops'''
