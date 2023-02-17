@@ -36,6 +36,7 @@ class CPU():
             temp_ctlr = Controller(bus_id=c, sensor_list=sensors)
             temp_ctlr.get_id()
             cls.Factory_Controllers_LUT.append(temp_ctlr)
+        helpers1.file_write_inventory(cls.Factory_Controllers_LUT, cls.Factory_Sensors_LUT)
         #for i, C in enumerate(cls.Factory_Controllers_LUT):
          #   print(f"Controller {i} id: {C.unique_id}")
           #  for j, S in enumerate(C.sensor_list):

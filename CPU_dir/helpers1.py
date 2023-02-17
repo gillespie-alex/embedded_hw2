@@ -74,3 +74,14 @@ def console_output(measurements):
         C_id, S_id, Temp = measure
         print(f"Controller: {C_id} Sensor: {S_id} reads Temperature: {Temp}")
 
+def file_write_inventory(controller_list, sensor_list):
+    inventory = open("inventory.txt", "w")
+    for i, controller in enumerate(controller_list):
+        inventory.write(f"Controller {i}: {controller.unique_id}\n")
+        for j, sensor in enumerate(sensor_list[i]):
+            inventory.write(f"  Sensor {j}: {sensor.unique_id}\n")
+
+
+def file_write_logs():
+    pass
+

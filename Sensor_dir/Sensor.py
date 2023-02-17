@@ -47,10 +47,13 @@ class TempSensor(Sensor):
     def temp_readings(self):
         low_byte_temp = self.request_data(self.master, self.bus_id, TempSensor.Factory_temp_addr[0])
         high_byte_temp = self.request_data(self.master, self.bus_id, self.Factory_temp_addr[1])
+        
         if low_byte_temp == -999 or high_byte_temp == -999:
             return -999
+        
         raw_temp_data = low_byte_temp | (high_byte_temp << 8)
         self.temp_data = given_methods.Linear_Function(raw_temp_data)
+        
         # This value is basically just a placeholder
         return self.temp_data
 
